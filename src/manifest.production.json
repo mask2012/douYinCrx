@@ -1,0 +1,55 @@
+{
+    "manifest_version": 2,
+    "name": "文章一键发布抖音",
+    "description": "提交文章链接，自动发布抖音",
+    "version": "0.0.1",
+    "options_page": "options.html",
+    "browser_action": {
+        "default_popup": "popup.html"
+    },
+    "icons": {
+        "16": "assets/icons/icon_16.png",
+        "48": "assets/icons/icon_48.png",
+        "144": "assets/icons/icon_144.png"
+    },
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "webNavigation",
+        "storage",
+        "background",
+        "notifications",
+        "http://*/*",
+        "https://*/*"
+    ],
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Alt+Y",
+                "mac": "Alt+Y"
+            },
+            "description": "打开一键发布抖音插件"
+        }
+    },
+    "background": {
+        "scripts": [
+            "js/background.js"
+        ]
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": [
+                "js/content.js"
+            ],
+            "run_at": "document_end"
+            // "css": [
+            //     "css/form.css"
+            // ]
+        }
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
