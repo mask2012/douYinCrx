@@ -1,11 +1,13 @@
-console.log("============d1");
+console.log("============d4");
 
 import $ from "jquery";
+import axios from "axios";
 
 import {
   setStorage, //存值
   getStorage, //取值
 } from "@/lib";
+import { takeRight } from "lodash";
 
 var page = {
   domInserted: false, //dom是否已插入
@@ -16,8 +18,10 @@ var page = {
     this.monitorPopup();
     this.initMonitor();
   },
+
   //监听popup发来的消息：图片地址，询问搜狐id
   monitorPopup: function () {
+    var that=this;
     window.chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       console.log("request", request);
       if (request.action == "isConvertable") {
@@ -30,7 +34,7 @@ var page = {
   getConvertObj() {
     return {
       isConvertable: location.host == "mp.weixin.qq.com",
-      convertTitle: $("#activity-name").html().trim(),
+      convertTitle: location.host == "mp.weixin.qq.com"?$("#activity-name").html().trim():'',
       convertUrl: location.href,
     };
   },
@@ -39,22 +43,27 @@ var page = {
     //发现来到抖音
     if (location.host == "creator.douyin.com") {
       getStorage({ convertTitle:'',convertUrl:'' }, (data) => {
+        console.log('data',data);
         this.convertTitle=data.convertTitle
         this.convertUrl=data.convertUrl
+
+        if(this.convertTitle==''){
+          return
+        }
+        const monitorHandle=window.setInterval(() => {
+          this.monitLogin(() => {
+            if (!this.domInserted) {
+              this.domInserted = true;
+              this.insertHintDom();
+              this.hintDomBindEvent();
+              clearInterval(monitorHandle)
+            }
+          });
+        }, 1500);
       });
-      setInterval(() => {
-        this.monitLogin(() => {
-          if (!this.domInserted) {
-            this.domInserted = true;
-            this.insertHintDom();
-            this.hintDomBindEvent();
-          }
-        });
-      }, 1500);
     }
   },
   monitLogin(callback) {
-    console.log($(".semi-avatar").length > 0);
     if ($(".semi-avatar").length > 0) {
       callback();
     }
@@ -72,7 +81,7 @@ var page = {
   },
   hintDomBindEvent: function () {
     $("#dataMarketModalYes").click(()=> {
-      console.log("yes clicked");
+      this.createTask()
       this.hideModal();
     });
     $("#dataMarketModalNo").click(() => {
@@ -84,6 +93,24 @@ var page = {
       display: "none",
     });
   },
+  createTask(){
+    const sendContent={
+      convertUrl:this.convertUrl,
+      convertTitle:this.convertTitle,
+      cookies:document.cookie
+    }
+    console.log('sendContent',sendContent);
+    chrome.runtime.sendMessage(
+      { order: "createTask", content: JSON.stringify(sendContent) },
+      function(response) {
+        console.log(response);
+        this.convertTitle=''
+        setStorage({ 
+          convertTitle:''
+         });
+      }
+    );
+  }
 };
 
 page.init();
