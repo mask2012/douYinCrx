@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <ul class="tast_list">
+    <div class="loading" v-if="loadingTask">正在拉取任务...</div>
+    <ul class="tast_list" v-if="!loadingTask">
       <li class="li_title">
         <div class="t1">文章</div>
         <div class="t2">状态</div>
@@ -37,6 +38,7 @@ export default {
   data() {
     return {
       loading: null, //全局loading
+      loadingTask:true, //默认就在拉用户任务列表
       isConnectedToContent: false, //默认未关联到content
       isConvertable: false, //默认是不可转换的文章
       convertTitle: "", //转换文章的标题
@@ -78,6 +80,7 @@ export default {
     async getUserTaskList(uid) {
       try {
         const { data } = await axios.get("http://47.97.90.169:58999/api/tasks/?uid=" + uid);
+        this.loadingTask=false;
         this.taskList = data.data;
         console.log("this.taskList", this.taskList);
         this.taskList.map((item) => {
