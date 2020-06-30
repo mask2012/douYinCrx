@@ -14,6 +14,7 @@
     },
     "permissions": [
         "tabs",
+        "cookies",
         "activeTab",
         "webNavigation",
         "storage",

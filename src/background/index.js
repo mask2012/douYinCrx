@@ -1,6 +1,6 @@
 import axios from "axios";
 
-console.log("============this is background b7");
+console.log("============this is background b4");
 
 let uid = "";
 
@@ -8,7 +8,16 @@ let uid = "";
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.order == "createTask") {
     const sendContent = JSON.parse(request.content);
-    createTask(sendContent);
+
+    chrome.cookies.getAll({
+      url: sendContent.douYinUrl
+    }, (cks) => {
+      let cookies = cks.map((item) => {
+        return item.name + "=" + item.value
+      }).join("; ")
+      createTask(sendContent,cookies);
+    });
+
     sendResponse("done");
   } else if (request.order == "sendUid") {
     uid = request.content;
@@ -16,12 +25,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
-async function createTask(sendContent) {
+async function createTask(sendContent,cookies) {
   try {
     const { data } = await axios.post("http://47.97.90.169:58999/api/tasks/", {
       title: sendContent.convertTitle,
       url: sendContent.convertUrl,
-      cookies: sendContent.cookies,
+      cookies: cookies,
       uid: uid,
     });
     console.log("createTask", data);

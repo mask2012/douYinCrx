@@ -7,7 +7,6 @@ import {
   setStorage, //存值
   getStorage, //取值
 } from "@/lib";
-import { takeRight } from "lodash";
 
 var page = {
   domInserted: false, //dom是否已插入
@@ -39,8 +38,8 @@ var page = {
     };
   },
 
+  //发现来到抖音就弹全屏确认
   initMonitor() {
-    //发现来到抖音
     if (location.host == "creator.douyin.com") {
       getStorage({ convertTitle:'',convertUrl:'' }, (data) => {
         console.log('data',data);
@@ -63,6 +62,7 @@ var page = {
       });
     }
   },
+  //监听登录
   monitLogin(callback) {
     if ($(".semi-avatar").length > 0) {
       callback();
@@ -97,9 +97,8 @@ var page = {
     const sendContent={
       convertUrl:this.convertUrl,
       convertTitle:this.convertTitle,
-      cookies:document.cookie
+      douYinUrl:location.href
     }
-    console.log('sendContent',sendContent);
     chrome.runtime.sendMessage(
       { order: "createTask", content: JSON.stringify(sendContent) },
       function(response) {

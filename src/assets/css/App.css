@@ -15,9 +15,10 @@ body{ background-color: #ccc; color: #252525;}
 .tast_list li.li_title{ font-size: 16px; font-weight: bold; position: sticky;}
 .tast_list li .t1{ width: 1px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 20px; box-sizing: border-box;}
 .tast_list li .t2{ width: 140px;}
-.tast_list li .progress1{ color: #e21876;}
+.tast_list li .progress1{ color: #dc54a0;}
 .tast_list li .progress2{ color: #188ee2;}
 .tast_list li .progress3{ color: #429e13;}
+.tast_list li .progress_error{ color: #f00;}
 
 
 

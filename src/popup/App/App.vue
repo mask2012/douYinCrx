@@ -95,7 +95,8 @@ export default {
       const statusObj = {
         0: "正在生成视频...",
         1: "正在发布抖音...",
-        2: "发布成功...",
+        2: "发布成功!",
+        99: "发布失败",
       };
       return statusObj[status];
     },
@@ -104,6 +105,7 @@ export default {
         0: "progress1",
         1: "progress2",
         2: "progress3",
+        99: "progress_error",
       };
       return statusObj[status];
     },
