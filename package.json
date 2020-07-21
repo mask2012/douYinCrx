@@ -29,7 +29,7 @@
     "fingerprintjs2": "^2.1.0",
     "html2canvas": "^1.0.0-rc.5",
     "jquery": "^3.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.26.0",
     "vue-cli-plugin-chrome-ext": "0.0.5",
     "vue-suggestion": "^1.1.0",
